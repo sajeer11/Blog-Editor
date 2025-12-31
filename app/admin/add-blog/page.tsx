@@ -13,16 +13,16 @@ const Tiptap = dynamic(() => import("@/components/Tiptap"), { ssr: false });
 export default function AddBlogPage() {
 
 
-const [description, setDescription] = useState("");
-const [slug, setSlug] = useState("");
-const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-const handleCategoryChange = (categoryId: string) => {
-  setSelectedCategories(prev =>
-    prev.includes(categoryId)
-      ? prev.filter(id => id !== categoryId) // uncheck
-      : [...prev, categoryId] // check
-  );
-};
+  const [description, setDescription] = useState("");
+  const [slug, setSlug] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategories(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId) // uncheck
+        : [...prev, categoryId] // check
+    );
+  };
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -88,14 +88,14 @@ const handleCategoryChange = (categoryId: string) => {
         </div>
 
         <div className="lg:w-96 md:w-80 w-full p-4 ">
-<SeoSidebar
-  title={title}
-  description={description}
-  slug={slug}
-  onFieldChange={handleSeoChange} 
-  selectedCategories={selectedCategories}
-  onCategoryChange={handleCategoryChange} 
-/>
+          <SeoSidebar
+            title={title}
+            description={description}
+            slug={slug}
+            onFieldChange={handleSeoChange}
+            selectedCategories={selectedCategories}
+            onCategoryChange={handleCategoryChange}
+          />
 
 
 

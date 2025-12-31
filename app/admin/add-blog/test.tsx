@@ -81,6 +81,7 @@ export default function AddBlogPage() {
             description={seoData?.description}
             slug={seoData?.slug}
             onFieldChange={handleSeoChange}
+            
       
           />
         </div>
