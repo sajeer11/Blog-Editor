@@ -77,7 +77,7 @@ const handleCategoryChange = (categoryId: string) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter Blog Title"
-            className="w-full text-2xl font-semibold "
+            className="w-full lg:text-2xl text-xl font-semibold "
           />
 
           <Tiptap
@@ -87,7 +87,7 @@ const handleCategoryChange = (categoryId: string) => {
           />
         </div>
 
-        <div className="lg:w-80 w-full p-4 ">
+        <div className="lg:w-96 md:w-80 w-full p-4 ">
 <SeoSidebar
   title={title}
   description={description}

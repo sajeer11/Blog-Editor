@@ -64,7 +64,7 @@ const SeoSidebar: FC<SeoSidebarProps> = ({
   );
 
   return (
-    <Card className="lg:w-60 w-full h-full border-none">
+    <Card className=" w-full h-full border-none">
       <CardHeader>
         <CardTitle >SEO Optimization</CardTitle>
       </CardHeader>

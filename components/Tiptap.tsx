@@ -77,7 +77,7 @@ const Tiptap: FC<TiptapProps> = ({ value, onChange, className }) => {
 
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value || "<p></p>");
+      editor.commands.setContent(value || "");
     }
   }, [value, editor]);
 
@@ -226,11 +226,11 @@ const Tiptap: FC<TiptapProps> = ({ value, onChange, className }) => {
 
 
       {/* Editor content */}
-      <div className="p-3 focus:outline-none min-h-[300px] max-w-none w-400">
+      <div className="p-3 focus:outline-none min-h-[300px] max-w-3/2 ">
         <EditorContent
 
           editor={editor}
-          className={`focus:outline-none min-h-[300px] max-w-none
+          className={`focus:outline-none min-h-[300px] max-w-full 
             [&_h1]:text-4xl [&_h2]:text-3xl [&_h3]:text-2xl
             [&_h4]:text-xl [&_h5]:text-lg [&_h6]:text-base
             prose prose-slate dark:prose-invert

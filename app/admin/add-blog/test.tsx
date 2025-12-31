@@ -74,12 +74,14 @@ export default function AddBlogPage() {
           />
         </div>
 
-        <div className="lg:w-80 w-full p-4 ">
+        <div className="lg:w-80 w-full p-4">
+         
           <SeoSidebar
-            title={seoData.title}
-            description={seoData.description}
-            slug={seoData.slug}
+            title={seoData?.title}
+            description={seoData?.description}
+            slug={seoData?.slug}
             onFieldChange={handleSeoChange}
+      
           />
         </div>
       </div>
