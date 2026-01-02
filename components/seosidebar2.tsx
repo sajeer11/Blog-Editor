@@ -28,7 +28,6 @@ interface SeoSidebarProps {
   onFieldChange: (field: string, value: string) => void;
   selectedCategories: string[];
   onCategoryChange: (categoryId: string) => void;
-  featuredImage?: string; // 🔥 optional prop
 }
 
 const SeoSidebar: FC<SeoSidebarProps> = ({
@@ -38,7 +37,6 @@ const SeoSidebar: FC<SeoSidebarProps> = ({
   onFieldChange,
   selectedCategories = [],
   onCategoryChange,
-  featuredImage,
 }) => {
   const [categories, setCategories] = useState([
     { id: "tech", name: "Technology" },
@@ -47,26 +45,13 @@ const SeoSidebar: FC<SeoSidebarProps> = ({
   ]);
   const [newCategory, setNewCategory] = useState("");
 
-  // 🔥 Handle image upload
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      onFieldChange("featuredImage", base64); // send image data to parent
-    };
-    reader.readAsDataURL(file);
-  };
-
   const addNewCategory = () => {
     const trimmed = newCategory.trim();
     if (!trimmed) return;
     const id = trimmed.toLowerCase().replace(/\s+/g, "-");
-    if (categories.find((cat) => cat.id === id))
-      return alert("Category already exists!");
+    if (categories.find(cat => cat.id === id)) return alert("Category already exists!");
     const newCat = { id, name: trimmed };
-    setCategories((prev) => [...prev, newCat]);
+    setCategories(prev => [...prev, newCat]);
     onCategoryChange(id);
     setNewCategory("");
   };
@@ -79,13 +64,13 @@ const SeoSidebar: FC<SeoSidebarProps> = ({
   );
 
   return (
-    <Card className="w-full h-full border-none">
+    <Card className=" w-full h-full border-none">
       <CardHeader>
-        <CardTitle>SEO Optimization</CardTitle>
+        <CardTitle >SEO Optimization</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 ">
         {/* Meta Title */}
-        <div>
+        <div >
           <label className="text-sm font-medium mb-1 block">Meta Title</label>
           <Input
             value={title}
@@ -118,27 +103,10 @@ const SeoSidebar: FC<SeoSidebarProps> = ({
           </p>
         </div>
 
-        {/* 🔥 Feature Image Upload */}
-        <div>
-          <label className="text-sm font-medium mb-1 block">Feature Image</label>
-          <Input type="file" accept="image/*" onChange={handleImageUpload} />
-          {featuredImage && (
-            <div className="mt-3 flex justify-center">
-              <img
-                src={featuredImage}
-                alt="Feature"
-                className="w-48 h-32 object-cover rounded-md border"
-              />
-            </div>
-          )}
-        </div>
-
         {/* Categories Dropdown */}
         <div className="mt-4">
-          <label className="text-medium text-gray-500 font-medium mb-2 block ml-1 ">
-            Categories
-          </label>
-          <DropdownMenu>
+          <label className="text-medium text-gray-500 font-medium mb-2 block ml-1 ">Categories</label>
+          <DropdownMenu >
             <DropdownMenuTrigger asChild>
               <Button className="w-full">Select Categories</Button>
             </DropdownMenuTrigger>
@@ -148,16 +116,14 @@ const SeoSidebar: FC<SeoSidebarProps> = ({
                 <Input
                   placeholder="Add new category"
                   value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
+                  onChange={e => setNewCategory(e.target.value)}
                   className="flex-1"
                 />
-                <Button size="sm" onClick={addNewCategory}>
-                  Add
-                </Button>
+                <Button size="sm" onClick={addNewCategory}>Add</Button>
               </div>
 
               {/* Category checkboxes */}
-              {categories.map((cat) => (
+              {categories.map(cat => (
                 <DropdownMenuItem key={cat.id} asChild>
                   <label className="flex items-center space-x-2 cursor-pointer">
                     <Checkbox
@@ -174,8 +140,8 @@ const SeoSidebar: FC<SeoSidebarProps> = ({
           {/* Selected Categories Display */}
           {selectedCategories.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
-              {selectedCategories.map((catId) => {
-                const cat = categories.find((c) => c.id === catId);
+              {selectedCategories.map(catId => {
+                const cat = categories.find(c => c.id === catId);
                 return (
                   <div
                     key={catId}

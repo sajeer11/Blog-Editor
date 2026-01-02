@@ -14,10 +14,24 @@ export default function AddBlogPage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [description, setDescription] = useState("");
+  const [slug, setSlug] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [seoData, setSeoData] = useState({ title: "", description: "", slug: "" });
 
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
   useEffect(() => {
-    setSeoData((prev) => ({ ...prev, slug: title.toLowerCase().replace(/\s+/g, "-") }));
+    setSeoData((prev) => ({
+      ...prev,
+      slug: title.toLowerCase().replace(/\s+/g, "-"),
+    }));
   }, [title]);
 
   const handleSeoChange = (field: string, value: string) => {
@@ -30,6 +44,7 @@ export default function AddBlogPage() {
       title,
       content,
       seo: seoData,
+      categories: selectedCategories,
       status,
       createdAt: new Date().toISOString(),
     };
@@ -40,6 +55,18 @@ export default function AddBlogPage() {
     console.log(blogData);
   };
 
+  // ✅ PREVIEW BUTTON HANDLER
+  const handlePreview = () => {
+    const previewData = {
+      title,
+      content,
+      seo: seoData,
+      categories: selectedCategories,
+    };
+    localStorage.setItem("blogPreview", JSON.stringify(previewData));
+    router.push("/blog/preview");
+  };
+
   return (
     <div className="w-full min-h-screen flex flex-col border">
       {/* Header */}
@@ -48,6 +75,9 @@ export default function AddBlogPage() {
           ← Back
         </Button>
         <div className="flex gap-3">
+          <Button variant="outline" onClick={handlePreview}>
+            Preview
+          </Button>
           <Button variant="secondary" onClick={() => saveBlog("draft")}>
             Save Draft
           </Button>
@@ -58,13 +88,13 @@ export default function AddBlogPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row flex-1 mt-17 w-full">
+      <div className="flex flex-col lg:flex-row flex-1 mt-13 w-full ">
         <div className="flex-1 flex flex-col gap-4 p-4">
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter Blog Title"
-            className="w-full text-2xl font-semibold"
+            className="w-full lg:text-3xl text-xl font-semibold "
           />
 
           <Tiptap
@@ -74,15 +104,14 @@ export default function AddBlogPage() {
           />
         </div>
 
-        <div className="lg:w-80 w-full p-4">
-         
+        <div className="lg:w-96 md:w-80 w-full p-4">
           <SeoSidebar
-            title={seoData?.title}
-            description={seoData?.description}
-            slug={seoData?.slug}
+            title={title}
+            description={description}
+            slug={slug}
             onFieldChange={handleSeoChange}
-            
-      
+            selectedCategories={selectedCategories}
+            onCategoryChange={handleCategoryChange}
           />
         </div>
       </div>

@@ -11,29 +11,44 @@ import dynamic from "next/dynamic";
 const Tiptap = dynamic(() => import("@/components/Tiptap"), { ssr: false });
 
 export default function AddBlogPage() {
+  const router = useRouter();
 
-
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [description, setDescription] = useState("");
   const [slug, setSlug] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategories(prev =>
-      prev.includes(categoryId)
-        ? prev.filter(id => id !== categoryId) // uncheck
-        : [...prev, categoryId] // check
-    );
-  };
-  const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [seoData, setSeoData] = useState({ title: "", description: "", slug: "" });
+  const [seoData, setSeoData] = useState({ title: "", description: "", slug: "" , featuredImage: "",  });
+
+  // ✅ Load preview data if coming back from preview page
+  useEffect(() => {
+    const previewData = localStorage.getItem("blogPreview");
+    if (previewData) {
+      const data = JSON.parse(previewData);
+      setTitle(data.title || "");
+      setContent(data.content || "");
+      setSeoData(data.seo || { title: "", description: "", slug: "" });
+      setSelectedCategories(data.categories || []);
+    }
+  }, []);
 
   useEffect(() => {
-    setSeoData((prev) => ({ ...prev, slug: title.toLowerCase().replace(/\s+/g, "-") }));
+    setSeoData((prev) => ({
+      ...prev,
+      slug: title.toLowerCase().replace(/\s+/g, "-"),
+    }));
   }, [title]);
 
   const handleSeoChange = (field: string, value: string) => {
     setSeoData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId]
+    );
   };
 
   const saveBlog = (status: "published" | "draft") => {
@@ -50,7 +65,26 @@ export default function AddBlogPage() {
     existingBlogs.push(blogData);
     localStorage.setItem("blogs", JSON.stringify(existingBlogs));
     alert(`${status === "published" ? "Published" : "Draft saved"} ✅`);
-    console.log(blogData);
+    console.log("🆕 Current Saved Blog:", blogData);
+
+
+    //console.log("📦 All Blogs in LocalStorage:", existingBlogs);
+
+
+
+  };
+
+  const handlePreview = () => {
+    const previewData = {
+      title,
+      content,
+      seo: seoData,
+      
+      categories: selectedCategories,
+    };
+    // ✅ Save preview data so we can load it when returning
+    localStorage.setItem("blogPreview", JSON.stringify(previewData));
+    router.push("/blog/preview");
   };
 
   return (
@@ -61,6 +95,9 @@ export default function AddBlogPage() {
           ← Back
         </Button>
         <div className="flex gap-3">
+          <Button variant="outline" onClick={handlePreview}>
+            Preview
+          </Button>
           <Button variant="secondary" onClick={() => saveBlog("draft")}>
             Save Draft
           </Button>
@@ -77,9 +114,10 @@ export default function AddBlogPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter Blog Title"
-            className="w-full lg:text-2xl text-xl font-semibold "
+            className="w-full lg:text-4xl text-xl font-semibold "
           />
 
+          {/* Editor */}
           <Tiptap
             value={content}
             onChange={setContent}
@@ -87,7 +125,7 @@ export default function AddBlogPage() {
           />
         </div>
 
-        <div className="lg:w-96 md:w-80 w-full p-4 ">
+        <div className="lg:w-96 md:w-80 w-full p-4">
           <SeoSidebar
             title={title}
             description={description}
@@ -95,10 +133,8 @@ export default function AddBlogPage() {
             onFieldChange={handleSeoChange}
             selectedCategories={selectedCategories}
             onCategoryChange={handleCategoryChange}
+              featuredImage={seoData.featuredImage} 
           />
-
-
-
         </div>
       </div>
     </div>
